@@ -1,0 +1,11 @@
+"S:\CLion 2023.3.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=S:/CLion 2023.3.3/bin/ninja/win/x64/ninja.exe" -G Ninja -S S:\CSC656HW1\vmmul-omp-harness-instructional -B S:\CSC656HW1\vmmul-omp-harness-instructional\cmake-build-debug
+-- compiler = GNU
+CMake Error at S:/CLion 2023.3.3/bin/cmake/win/x64/share/cmake-3.27/Modules/FindPackageHandleStandardArgs.cmake:230 (message):
+  Could NOT find BLAS (missing: BLAS_LIBRARIES)
+Call Stack (most recent call first):
+  S:/CLion 2023.3.3/bin/cmake/win/x64/share/cmake-3.27/Modules/FindPackageHandleStandardArgs.cmake:600 (_FPHSA_FAILURE_MESSAGE)
+  S:/CLion 2023.3.3/bin/cmake/win/x64/share/cmake-3.27/Modules/FindBLAS.cmake:1383 (find_package_handle_standard_args)
+  CMakeLists.txt:11 (find_package)
+
+
+-- Configuring incomplete, errors occurred!
