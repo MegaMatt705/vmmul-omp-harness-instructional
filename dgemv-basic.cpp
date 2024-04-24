@@ -28,21 +28,3 @@ void my_dgemv(int n, double* A, double* x, double* y) {
         y[i] += sum;
     }
 }
-
-// function to test the algorithm, will remove for real assignment
-int main() {
-    int n = 3;
-    double A[9] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0};
-    double x[3] = {1.0, 2.0, 3.0};
-    double y[3] = {1.0, 2.0, 3.0};
-
-    my_dgemv(n, A, x, y);
-
-    std::cout << "Result: ";
-    for (int i = 0; i < n; i++) {
-        std::cout << y[i] << " ";
-    }
-    std::cout << std::endl;
-
-    return 0;
-}
