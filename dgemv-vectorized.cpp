@@ -12,8 +12,10 @@ void my_dgemv(int n, double* A, double* x, double* y) {
     #pragma omp parallel for
     for (int i = 0; i < n; ++i) {
         double sum = 0.0;
+        #pragma omp simd reduction(+:sum)
         for (int j = 0; j < n; ++j) {
-            sum += A[i * n + j] * x[j];
+            // Reordering memory accesses
+            sum += A[j * n + i] * x[j];
         }
         y[i] += sum;
     }
