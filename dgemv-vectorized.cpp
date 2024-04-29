@@ -9,18 +9,17 @@ const char* dgemv_desc = "Vectorized implementation of matrix-vector multiply.";
  * On exit, A and X maintain their input values.
  */
 void my_dgemv(int n, double* A, double* x, double* y) {
-    const int blockSize = 4; // Tile size
     #pragma omp parallel for
-    for (int i = 0; i < n; i += blockSize) {
-        for (int j = 0; j < n; j += blockSize) {
-            for (int ii = i; ii < i + blockSize && ii < n; ++ii) {
-                double sum = 0.0;
-                for (int jj = j; jj < j + blockSize && jj < n; ++jj) {
-                    sum += A[ii * n + jj] * x[jj];
-                }
-                y[ii] += sum;
+    for (int i = 0; i < n; ++i) {
+        double sum = 0.0;
+        for (int j = 0; j < n; j += 4) {
+            __builtin_prefetch(&A[i * n + j], 0, 3); // Prefetch A
+            __builtin_prefetch(&x[j], 0, 3); // Prefetch x
+            for (int k = 0; k < 4 && j + k < n; ++k) {
+                sum += A[(j + k) * n + i] * x[j + k];
             }
         }
+        y[i] += sum;
     }
 }
 
