@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <omp.h>
+#include <cstdlib>
 
 const char* dgemv_desc = "OpenMP dgemv.";
 
@@ -13,7 +14,8 @@ void my_dgemv(int n, double* A, double* x, double* y) {
     #pragma omp parallel
     {
         int thread_id = omp_get_thread_num();
-        int nthreads = OMP_NUM_THREADS;
+        // getenv to retrieve OMP_NUM_THREADS and convert it to an integer
+        int nthreads = atoi(getenv("OMP_NUM_THREADS"));
         int chunk_size = n / nthreads;
         int start = thread_id * chunk_size;
         int end = (thread_id == nthreads - 1) ? n : start + chunk_size;
