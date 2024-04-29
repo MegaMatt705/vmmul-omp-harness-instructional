@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <omp.h>
-#include "job.in"
 
 const char* dgemv_desc = "OpenMP dgemv.";
 
