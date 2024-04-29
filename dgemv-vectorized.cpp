@@ -9,16 +9,22 @@ const char* dgemv_desc = "Vectorized implementation of matrix-vector multiply.";
  * On exit, A and X maintain their input values.
  */
 void my_dgemv(int n, double* A, double* x, double* y) {
-    #pragma omp parallel for
-    for (int i = 0; i < n; ++i) {
-        double sum = 0.0;
-        for (int j = 0; j < n; j += 4) {
-            __builtin_prefetch(&A[i * n + j], 0, 3); // Prefetch A
-            __builtin_prefetch(&x[j], 0, 3); // Prefetch x
-            for (int k = 0; k < 4 && j + k < n; ++k) {
-                sum += A[(j + k) * n + i] * x[j + k];
-            }
+    // Initialize a temporary variable to hold the sum of products
+    double sum;
+
+    // Loop through each row of the matrix A
+    for (int i = 0; i < n; i++) {
+        // Initialize the sum for the current row
+        sum = 0.0;
+
+        // Loop through each column of the matrix A
+        for (int j = 0; j < n; j++) {
+            // Multiply the current element of A by the corresponding element of X
+            // and add it to the sum
+            sum += A[i * n + j] * x[j];
         }
+
+        // Add the sum to the corresponding element of Y
         y[i] += sum;
     }
 }
