@@ -1,6 +1,7 @@
 const char* dgemv_desc = "Vectorized implementation of matrix-vector multiply.";
 
 #include <omp.h>
+#include <immintrin.h>
 
 /*
  * This routine performs a dgemv operation
@@ -8,24 +9,18 @@ const char* dgemv_desc = "Vectorized implementation of matrix-vector multiply.";
  * where A is n-by-n matrix stored in row-major format, and X and Y are n by 1 vectors.
  * On exit, A and X maintain their input values.
  */
-void my_dgemv(int n, double* A, double* x, double* y) {
-    // Initialize a temporary variable to hold the sum of products
-    double sum;
-
-    // Loop through each row of the matrix A
-    for (int i = 0; i < n; i++) {
-        // Initialize the sum for the current row
-        sum = 0.0;
-
-        // Loop through each column of the matrix A
-        for (int j = 0; j < n; j++) {
-            // Multiply the current element of A by the corresponding element of X
-            // and add it to the sum
-            sum += A[i * n + j] * x[j];
+void my_dgemv_simd(int n, double* A, double* x, double* y) {
+    #pragma omp parallel for
+    for (int i = 0; i < n; ++i) {
+        __m256d sum = _mm256_setzero_pd();
+        for (int j = 0; j < n; j += 4) {
+            __m256d a = _mm256_loadu_pd(&A[i * n + j]);
+            __m256d x_vec = _mm256_loadu_pd(&x[j]);
+            sum = _mm256_add_pd(sum, _mm256_mul_pd(a, x_vec));
         }
-
-        // Add the sum to the corresponding element of Y
-        y[i] += sum;
+        double temp[4];
+        _mm256_storeu_pd(temp, sum);
+        y[i] += temp[0] + temp[1] + temp[2] + temp[3];
     }
 }
 
