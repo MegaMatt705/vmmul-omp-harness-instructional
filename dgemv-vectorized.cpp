@@ -1,7 +1,7 @@
 const char* dgemv_desc = "Vectorized implementation of matrix-vector multiply.";
 
 #include <omp.h>
-#include <immintrin.h>
+#include <stdlib.h>
 
 /*
  * This routine performs a dgemv operation
